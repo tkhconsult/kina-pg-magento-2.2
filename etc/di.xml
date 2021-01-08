@@ -1,0 +1,185 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2020 TkhConsult. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Payment Method Facade configuration -->
+    <virtualType name="KinabankPaymentGatewayFacade" type="TkhConsult\KinaPg\Model\Kinabank">
+        <arguments>
+            <argument name="code" xsi:type="const">\TkhConsult\KinaPg\Model\Ui\ConfigProvider::CODE</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">TkhConsult\KinaPg\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">KinabankPaymentGatewayValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">KinabankPaymentGatewayValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">KinabankPaymentGatewayCommandPool</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Configuration reader -->
+    <virtualType name="KinabankPaymentGatewayConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">\TkhConsult\KinaPg\Model\Ui\ConfigProvider::CODE</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Logger, initialized with KinabankPaymentGatewayConfig -->
+    <virtualType name="KinabankPaymentGatewayLogger" type="Magento\Payment\Model\Method\Logger">
+        <arguments>
+            <argument name="config" xsi:type="object">KinabankPaymentGatewayConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="TkhConsult\KinaPg\Gateway\Http\Client\ClientMock">
+        <arguments>
+            <argument name="logger" xsi:type="object">KinabankPaymentGatewayLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- Commands infrastructure -->
+    <virtualType name="KinabankPaymentGatewayCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="authorize" xsi:type="string">KinabankPaymentGatewayAuthorizeCommand</item>
+                <item name="capture" xsi:type="string">KinabankPaymentGatewayCaptureCommand</item>
+                <item name="void" xsi:type="string">KinabankPaymentGatewayVoidCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Authorize command -->
+    <virtualType name="KinabankPaymentGatewayAuthorizeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">KinabankPaymentGatewayAuthorizationRequest</argument>
+            <argument name="handler" xsi:type="object">KinabankPaymentGatewayResponseHandlerComposite</argument>
+            <argument name="transferFactory" xsi:type="object">TkhConsult\KinaPg\Gateway\Http\TransferFactory</argument>
+            <argument name="client" xsi:type="object">TkhConsult\KinaPg\Gateway\Http\Client\ClientMock</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Authorization Request -->
+    <virtualType name="KinabankPaymentGatewayAuthorizationRequest" type="Magento\Payment\Gateway\Request\BuilderComposite">
+        <arguments>
+            <argument name="builders" xsi:type="array">
+                <item name="transaction" xsi:type="string">TkhConsult\KinaPg\Gateway\Request\AuthorizationRequest</item>
+                <item name="mockData" xsi:type="string">TkhConsult\KinaPg\Gateway\Request\MockDataRequest</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="TkhConsult\KinaPg\Gateway\Request\AuthorizationRequest">
+        <arguments>
+            <argument name="config" xsi:type="object">KinabankPaymentGatewayConfig</argument>
+        </arguments>
+    </type>
+
+    <!-- Capture command -->
+    <virtualType name="KinabankPaymentGatewayCaptureCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">TkhConsult\KinaPg\Gateway\Request\CaptureRequest</argument>
+            <argument name="handler" xsi:type="object">TkhConsult\KinaPg\Gateway\Response\TxnIdHandler</argument>
+            <argument name="transferFactory" xsi:type="object">TkhConsult\KinaPg\Gateway\Http\TransferFactory</argument>
+            <argument name="validator" xsi:type="object">TkhConsult\KinaPg\Gateway\Validator\ResponseCodeValidator</argument>
+            <argument name="client" xsi:type="object">TkhConsult\KinaPg\Gateway\Http\Client\ClientMock</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Capture Request -->
+    <type name="TkhConsult\KinaPg\Gateway\Request\CaptureRequest">
+        <arguments>
+            <argument name="config" xsi:type="object">KinabankPaymentGatewayConfig</argument>
+        </arguments>
+    </type>
+
+    <!-- Void command -->
+    <virtualType name="KinabankPaymentGatewayVoidCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">TkhConsult\KinaPg\Gateway\Request\VoidRequest</argument>
+            <argument name="handler" xsi:type="object">TkhConsult\KinaPg\Gateway\Response\TxnIdHandler</argument>
+            <argument name="transferFactory" xsi:type="object">TkhConsult\KinaPg\Gateway\Http\TransferFactory</argument>
+            <argument name="validator" xsi:type="object">TkhConsult\KinaPg\Gateway\Validator\ResponseCodeValidator</argument>
+            <argument name="client" xsi:type="object">TkhConsult\KinaPg\Gateway\Http\Client\ClientMock</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Void Request -->
+    <type name="TkhConsult\KinaPg\Gateway\Request\VoidRequest">
+        <arguments>
+            <argument name="config" xsi:type="object">KinabankPaymentGatewayConfig</argument>
+        </arguments>
+    </type>
+
+    <!-- Response handlers -->
+    <virtualType name="KinabankPaymentGatewayResponseHandlerComposite" type="Magento\Payment\Gateway\Response\HandlerChain">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="txnid" xsi:type="string">TkhConsult\KinaPg\Gateway\Response\TxnIdHandler</item>
+                <item name="fraud" xsi:type="string">TkhConsult\KinaPg\Gateway\Response\FraudHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Value handlers infrastructure -->
+    <virtualType name="KinabankPaymentGatewayValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">KinabankPaymentGatewayConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="KinabankPaymentGatewayConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">KinabankPaymentGatewayConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="TkhConsult\KinaPg\Block\Info">
+        <arguments>
+            <argument name="config" xsi:type="object">KinabankPaymentGatewayConfig</argument>
+        </arguments>
+    </type>
+
+    <type name="TkhConsult\KinaPg\Block\Adminhtml\System\Config\CheckConfigAdmin">
+        <arguments>
+            <argument name="config" xsi:type="object">KinabankPaymentGatewayConfig</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="KinabankPaymentCurrencyValidator" type="TkhConsult\KinaPg\Gateway\Validator\CurrencyValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">KinabankPaymentGatewayConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="KinabankPaymentCountryValidator" type="TkhConsult\KinaPg\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">KinabankPaymentGatewayConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="KinabankPaymentGatewayValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">KinabankPaymentCountryValidator</item>
+                <item name="currency" xsi:type="string">KinabankPaymentCurrencyValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+
+    <type name="TkhConsult\KinaPg\Logger\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="TkhConsult\KinaPg\Logger\Logger">
+        <arguments>
+            <argument name="name" xsi:type="const">\TkhConsult\KinaPg\Model\Ui\ConfigProvider::CODE</argument>
+            <argument name="handlers" xsi:type="array">
+                <item name="system" xsi:type="object">TkhConsult\KinaPg\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

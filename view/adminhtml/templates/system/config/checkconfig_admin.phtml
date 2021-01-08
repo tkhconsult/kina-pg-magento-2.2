@@ -1,0 +1,7 @@
+<div>
+    <?php if (!$block->getCurrency()) : // SimplePath not supported ?>
+        <div>
+            <?= $block->escapeHtml(__('An unsupported currency is currently selected. Please change your currency to ' . \TkhConsult\KinaPg\Model\Ui\ConfigProvider::SUPPORT_CURRENCY)); ?>
+        </div>
+    <?php endif; ?>
+</div>

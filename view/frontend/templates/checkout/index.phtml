@@ -1,0 +1,43 @@
+<?php
+    /**
+ * @var \TkhConsult\KinaPg\Block\Checkout\Index $block
+ */
+    $order = $block->getOrder();
+?>
+<div class="table-wrapper">
+    <table class="items data table" style="max-width: 600px">
+        <caption class="table-caption">Shopping Cart Items</caption>
+        <thead>
+            <tr class="item-info">
+                <td class="col item" scope="col">
+                    <div><b>ORDER NUMBER:</b></div>
+                    <?php echo $order['id']; ?>
+                </td>
+            </tr>
+        </thead>
+        <tbody class="item">
+            <tr class="item-info">
+                <td class="col item" scope="col">
+                    <div><b>DATE:</b></div>
+                    <?php echo date('M d, Y'); ?>
+                </td>
+            </tr>
+            <tr class="item-info">
+                <td class="col item" scope="col">
+                    <div><b>TOTAL:</b></div>
+                    <?php echo $order['currency']; ?>
+                    <?php echo $order['amount']; ?>
+                </td>
+            </tr>
+            <tr class="item-info">
+                <td class="col item" scope="col">
+                    <div><b>PAYMENT METHOD:</b></div>
+                    <?php echo $order['title']; ?>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<?php
+    $block->getForm();
+?>
