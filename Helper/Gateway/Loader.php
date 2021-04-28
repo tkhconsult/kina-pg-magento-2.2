@@ -120,15 +120,17 @@ class Loader {
             return false;
         }
 
+        $diff = abs($order_total - $amount);
+
+        if(!is_null($logger)) $logger->info('amount, order total, diff: "' . $amount . '", "' . $order_total . '", "' . $diff . '"');
+
         if($trxType === KinaBankGateway::TRX_TYPE_REFUND)
-            return $amount <= $order_total;
+            return $amount <= $order_total || $diff < 1;
 
         if($trxType === KinaBankGateway::TRX_TYPE_REVERSAL)
-            return $amount <= $order_total;
+            return $amount <= $order_total || $diff < 1;
 
-        if(!is_null($logger)) $logger->info('amount: "' . $amount . '", "' . $order_total . '"');
-
-        return $amount == $order_total;
+        return $amount == $order_total || $diff < 1;
     }
 
     public function getOrderMessage($message) {
