@@ -15,6 +15,8 @@ use Magento\Sales\Model\Order\Invoice;
 use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Sales\Model\Service\InvoiceService;
 use Magento\Store\Model\ScopeInterface;
+use Magento\Framework\View\Asset\Repository;
+use Magento\Framework\App\RequestInterface;
 use TkhConsult\KinaBankGateway\KinaBank\Response;
 use TkhConsult\KinaBankGateway\KinaBankGateway;
 use TkhConsult\KinaPg\Model\Ui\ConfigProvider;
@@ -36,6 +38,14 @@ class Loader {
      * @var OrderSender
      */
     protected $orderSender;
+    /**
+     * @var Repository
+     */
+    protected $assetRepo;
+    /**
+     * @var RequestInterface
+     */
+    protected $request;
 
     protected $filesystem;
     protected $backRefUrl;
@@ -59,6 +69,8 @@ class Loader {
         $this->invoiceService = $objectManager->create(InvoiceService::class);
         $this->invoiceSender = $objectManager->create(InvoiceSender::class);
         $this->transaction = $objectManager->create(DBTransaction::class);
+        $this->assetRepo = $objectManager->create(Repository::class);
+        $this->request = $objectManager->create(RequestInterface::class);
         if(false) (new Adapter())->initialize('','');
     }
 
@@ -146,7 +158,9 @@ class Loader {
             ->setMerchantAddress($data['merchantAddress'])
             ->setTimezone($data['timezone'])
             ->setDebug($data['debug'])
-            ->setDefaultLanguage($data['lang']);
+            ->setDefaultLanguage($data['lang'])
+            ->setAcceptUrl($this->getAcceptLogoUrl())
+            ->setSubmitButtonLabel('Click here to pay');
 
         $kinaBankGateway->setSecurityOptions($data['keyPath']);
 
@@ -213,5 +227,27 @@ class Loader {
         $this->invoiceSender->send($invoice);
         $order->addStatusToHistory(false, __('Invoice #%1 created', $invoice->getIncrementId()), true);
         $order->save();
+    }
+
+    public function getAcceptLogoUrl()
+    {
+        return $this->getViewFileUrl('TkhConsult_KinaPg::accept.png');
+    }
+
+    /**
+     * Retrieve url of a view file
+     *
+     * @param string $fileId
+     * @param array $params
+     * @return string
+     */
+    public function getViewFileUrl($fileId, array $params = [])
+    {
+        try {
+            $params = array_merge(['_secure' => $this->request->isSecure()], $params);
+            return $this->assetRepo->getUrlWithParams($fileId, $params);
+        } catch (LocalizedException $e) {
+            return '';
+        }
     }
 }
