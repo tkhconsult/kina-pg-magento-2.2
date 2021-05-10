@@ -6,23 +6,14 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit50478dfc75549edea87a587529262f04
 {
-    public static $files = array (
-        '99cb4e8a655c49699d987e3154381d7c' => __DIR__ . '/../..' . '/registration.php',
-    );
-
     public static $prefixLengthsPsr4 = array (
         'T' => 
         array (
-            'TkhConsult\\KinaPg\\' => 18,
             'TkhConsult\\KinaBankGateway\\' => 27,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'TkhConsult\\KinaPg\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/',
-        ),
         'TkhConsult\\KinaBankGateway\\' => 
         array (
             0 => __DIR__ . '/..' . '/tkhconsult/kina-bank-gateway/src',
@@ -45,32 +36,6 @@ class ComposerStaticInit50478dfc75549edea87a587529262f04
         'TkhConsult\\KinaBankGateway\\KinaBank\\ResponseInterface' => __DIR__ . '/..' . '/tkhconsult/kina-bank-gateway/src/KinaBank/ResponseInterface.php',
         'TkhConsult\\KinaBankGateway\\KinaBank\\Reversal\\ReversalRequest' => __DIR__ . '/..' . '/tkhconsult/kina-bank-gateway/src/KinaBank/Reversal/ReversalRequest.php',
         'TkhConsult\\KinaBankGateway\\KinaBank\\Reversal\\ReversalResponse' => __DIR__ . '/..' . '/tkhconsult/kina-bank-gateway/src/KinaBank/Reversal/ReversalResponse.php',
-        'TkhConsult\\KinaPg\\Block\\Adminhtml\\System\\Config\\CheckConfigAdmin' => __DIR__ . '/../..' . '/test/TkhConsult1/KinaPg/Block/Adminhtml/System/Config/CheckConfigAdmin.php',
-        'TkhConsult\\KinaPg\\Block\\Adminhtml\\System\\Config\\Form\\CheckConfig' => __DIR__ . '/../..' . '/test/TkhConsult1/KinaPg/Block/Adminhtml/System/Config/Form/CheckConfig.php',
-        'TkhConsult\\KinaPg\\Block\\Checkout\\Index' => __DIR__ . '/../..' . '/test/TkhConsult1/KinaPg/Block/Checkout/Index.php',
-        'TkhConsult\\KinaPg\\Block\\Info' => __DIR__ . '/../..' . '/test/TkhConsult1/KinaPg/Block/Info.php',
-        'TkhConsult\\KinaPg\\Controller\\Checkout\\Index' => __DIR__ . '/../..' . '/test/TkhConsult1/KinaPg/Controller/Checkout/Index.php',
-        'TkhConsult\\KinaPg\\Controller\\Checkout\\Pay' => __DIR__ . '/../..' . '/test/TkhConsult1/KinaPg/Controller/Checkout/Pay.php',
-        'TkhConsult\\KinaPg\\Gateway\\Http\\Client\\ClientMock' => __DIR__ . '/../..' . '/test/TkhConsult1/KinaPg/Gateway/Http/Client/ClientMock.php',
-        'TkhConsult\\KinaPg\\Gateway\\Http\\TransferFactory' => __DIR__ . '/../..' . '/test/TkhConsult1/KinaPg/Gateway/Http/TransferFactory.php',
-        'TkhConsult\\KinaPg\\Gateway\\Request\\AuthorizationRequest' => __DIR__ . '/../..' . '/test/TkhConsult1/KinaPg/Gateway/Request/AuthorizationRequest.php',
-        'TkhConsult\\KinaPg\\Gateway\\Request\\CaptureRequest' => __DIR__ . '/../..' . '/test/TkhConsult1/KinaPg/Gateway/Request/CaptureRequest.php',
-        'TkhConsult\\KinaPg\\Gateway\\Request\\MockDataRequest' => __DIR__ . '/../..' . '/test/TkhConsult1/KinaPg/Gateway/Request/MockDataRequest.php',
-        'TkhConsult\\KinaPg\\Gateway\\Request\\VoidRequest' => __DIR__ . '/../..' . '/test/TkhConsult1/KinaPg/Gateway/Request/VoidRequest.php',
-        'TkhConsult\\KinaPg\\Gateway\\Response\\FraudHandler' => __DIR__ . '/../..' . '/test/TkhConsult1/KinaPg/Gateway/Response/FraudHandler.php',
-        'TkhConsult\\KinaPg\\Gateway\\Response\\TxnIdHandler' => __DIR__ . '/../..' . '/test/TkhConsult1/KinaPg/Gateway/Response/TxnIdHandler.php',
-        'TkhConsult\\KinaPg\\Gateway\\Validator\\CountryValidator' => __DIR__ . '/../..' . '/test/TkhConsult1/KinaPg/Gateway/Validator/CountryValidator.php',
-        'TkhConsult\\KinaPg\\Gateway\\Validator\\CurrencyValidator' => __DIR__ . '/../..' . '/test/TkhConsult1/KinaPg/Gateway/Validator/CurrencyValidator.php',
-        'TkhConsult\\KinaPg\\Gateway\\Validator\\ResponseCodeValidator' => __DIR__ . '/../..' . '/test/TkhConsult1/KinaPg/Gateway/Validator/ResponseCodeValidator.php',
-        'TkhConsult\\KinaPg\\Helper\\Gateway\\Loader' => __DIR__ . '/../..' . '/test/TkhConsult1/KinaPg/Helper/Gateway/Loader.php',
-        'TkhConsult\\KinaPg\\Logger\\Handler' => __DIR__ . '/../..' . '/Logger/Handler.php',
-        'TkhConsult\\KinaPg\\Logger\\Logger' => __DIR__ . '/../..' . '/Logger/Logger.php',
-        'TkhConsult\\KinaPg\\Model\\Adminhtml\\Source\\PaymentAction' => __DIR__ . '/../..' . '/test/TkhConsult1/KinaPg/Model/Adminhtml/Source/PaymentAction.php',
-        'TkhConsult\\KinaPg\\Model\\Config\\Backend\\CustomFileType' => __DIR__ . '/../..' . '/test/TkhConsult1/KinaPg/Model/Config/Backend/CustomFileType.php',
-        'TkhConsult\\KinaPg\\Model\\Kinabank' => __DIR__ . '/../..' . '/test/TkhConsult1/KinaPg/Model/Kinabank.php',
-        'TkhConsult\\KinaPg\\Model\\Ui\\ConfigProvider' => __DIR__ . '/../..' . '/test/TkhConsult1/KinaPg/Model/Ui/ConfigProvider.php',
-        'TkhConsult\\KinaPg\\Observer\\DataAssignObserver' => __DIR__ . '/../..' . '/test/TkhConsult1/KinaPg/Observer/DataAssignObserver.php',
-        'TkhConsult\\KinaPg\\Observer\\OrderDefaultCheckoutStatusObserver' => __DIR__ . '/../..' . '/test/TkhConsult1/KinaPg/Observer/OrderDefaultCheckoutStatusObserver.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
