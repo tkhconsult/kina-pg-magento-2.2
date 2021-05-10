@@ -36,6 +36,8 @@ abstract class Request implements RequestInterface
      * @var array
      */
     protected $_requestFields = [];
+    protected $_acceptUrl = '';
+    protected $_submitButtonLabel = '';
 
     /**
      * Construct
@@ -47,7 +49,7 @@ abstract class Request implements RequestInterface
      *
      * @throws Exception
      */
-    public function __construct(array $requestParams, $gatewayUrl, $debugMode = false, $sslVerify = true)
+    public function __construct(array $requestParams, $gatewayUrl, $acceptUrl = '', $submitButtonLabel = '', $debugMode = false, $sslVerify = true)
     {
         #Push the request field values
         foreach ($requestParams as $name => $value) {
@@ -59,6 +61,8 @@ abstract class Request implements RequestInterface
 
         #Set gateway URL
         $this->_gatewayUrl = $gatewayUrl;
+        $this->_acceptUrl = $acceptUrl;
+        $this->_submitButtonLabel = $submitButtonLabel;
         #Set debug mode
         $this->_debugMode = $debugMode;
         #Set SSL verify mode

@@ -40,6 +40,13 @@ class KinaBankGateway
     private $merchant;
 
     /**
+     * @var bool
+     */
+    private $showAccept = false;
+    private $acceptUrl = '';
+    private $submitButtonLabel = 'Checkout - Credit/Debit Cards';
+
+    /**
      * @var string
      */
     private $terminal;
@@ -181,6 +188,35 @@ class KinaBankGateway
     public function setDebug($debug)
     {
         $this->debug = (boolean)$debug;
+
+        return $this;
+    }
+
+    /**
+     * Accept URL setter
+     *
+     * @param boolean $debug
+     *
+     * @return $this
+     */
+    public function setAcceptUrl($acceptUrl)
+    {
+        $this->acceptUrl = $acceptUrl;
+        $this->showAccept = !empty($acceptUrl);
+
+        return $this;
+    }
+
+    /**
+     * Submit button label setter
+     *
+     * @param boolean $debug
+     *
+     * @return $this
+     */
+    public function setSubmitButtonLabel($label)
+    {
+        $this->submitButtonLabel = $label;
 
         return $this;
     }
@@ -417,7 +453,7 @@ class KinaBankGateway
                     KinaBank\Authorization\AuthorizationRequest::MERCHANT      => $this->merchant,
                     KinaBank\Authorization\AuthorizationRequest::MERCH_NAME    => $this->merchantName,
                     KinaBank\Authorization\AuthorizationRequest::MERCH_URL     => $this->merchantUrl,
-                ], $this->gatewayUrl, $this->debug, $this->sslVerify
+                ], $this->gatewayUrl, $this->acceptUrl, $this->submitButtonLabel, $this->debug, $this->sslVerify
             );
             $request->request();
         } catch (KinaBank\Exception $e) {
