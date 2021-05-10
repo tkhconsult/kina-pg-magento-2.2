@@ -32,7 +32,7 @@ class Pay extends Action
         $this->_logger = $context->getObjectManager()->create(Logger::class);
         $this->_pageFactory = $pageFactory;
         $this->orderRepository = $context->getObjectManager()->create(OrderRepositoryInterface::class);
-        $this->loader = new Loader($this->_url->getUrl('kinabank/checkout/pay', ['_query' => $this->getRequest()->getParams()]));
+        $this->loader = new Loader($this->_url->getUrl('kinabank/checkout/pay', ['_query' => $this->getRequest()->getParams()]), $this->getRequest());
         $this->methodTitle = $this->loader->getConfigData('title');
     }
 

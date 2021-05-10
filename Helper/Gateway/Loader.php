@@ -20,6 +20,7 @@ use Magento\Framework\App\RequestInterface;
 use TkhConsult\KinaBankGateway\KinaBank\Response;
 use TkhConsult\KinaBankGateway\KinaBankGateway;
 use TkhConsult\KinaPg\Model\Ui\ConfigProvider;
+use Magento\Framework\Exception\LocalizedException;
 
 class Loader {
     /**
@@ -60,7 +61,7 @@ class Loader {
 
     const XML_PATH_PREFIX = 'payment/kinabank_gateway/';
 
-    public function __construct($backRefUrl) {
+    public function __construct($backRefUrl, $request = null) {
         $objectManager = ObjectManager::getInstance();
         $this->scopeConfig = $objectManager->create(ScopeConfigInterface::class);
         $this->filesystem = $objectManager->create(Filesystem::class);
@@ -70,7 +71,7 @@ class Loader {
         $this->invoiceSender = $objectManager->create(InvoiceSender::class);
         $this->transaction = $objectManager->create(DBTransaction::class);
         $this->assetRepo = $objectManager->create(Repository::class);
-        $this->request = $objectManager->create(RequestInterface::class);
+        $this->request = $request;
         if(false) (new Adapter())->initialize('','');
     }
 
@@ -244,6 +245,7 @@ class Loader {
     public function getViewFileUrl($fileId, array $params = [])
     {
         try {
+            if(is_null($this->request)) return '';
             $params = array_merge(['_secure' => $this->request->isSecure()], $params);
             return $this->assetRepo->getUrlWithParams($fileId, $params);
         } catch (LocalizedException $e) {

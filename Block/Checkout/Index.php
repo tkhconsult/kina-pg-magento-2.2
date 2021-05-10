@@ -26,7 +26,7 @@ class Index extends Template
     ) {
         parent::__construct($context, $data);
         $this->orderRepository = $orderRepository;
-        $this->loader = new Loader($this->getUrl('kinabank/checkout/pay', ['_query' => $this->getRequest()->getParams()]));
+        $this->loader = new Loader($this->getUrl('kinabank/checkout/pay', ['_query' => $this->getRequest()->getParams()]), $this->getRequest());
         $this->scopeConfig = $scopeConfig;
     }
 
