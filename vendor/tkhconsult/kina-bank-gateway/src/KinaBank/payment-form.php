@@ -21,7 +21,7 @@
     .we-accept {
         padding-top: 40px;
     }
-    .we-accept {
+    .we-accept .accept-logo {
         height: 25px;
     }
 </style>
