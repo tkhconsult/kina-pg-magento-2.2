@@ -21,6 +21,9 @@
     .we-accept {
         padding-top: 40px;
     }
+    .we-accept {
+        height: 25px;
+    }
 </style>
 <form
     id="<?php echo $formId; ?>"
