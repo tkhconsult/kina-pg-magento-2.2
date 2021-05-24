@@ -94,7 +94,9 @@ class Pay extends Action
             return $this->_pageFactory->create();
         }
 
-        if($check_result && $this->loader->checkTransaction($order, $bankResponse)) {
+        $this->_logger->info('check result: ' . $check_result);
+
+        if($check_result && $this->loader->checkTransaction($order, $bankResponse, $this->_logger)) {
             switch($bankResponse::TRX_TYPE) {
                 case KinaBankGateway::TRX_TYPE_AUTHORIZATION:
                     if($order->getTotalPaid() == $order->getGrandTotal()) {
@@ -112,20 +114,11 @@ class Pay extends Action
 
                     $message = '';
                     switch($this->loader->getConfigData('payment_action')) {
-                        case Loader::TRANSACTION_TYPE_CHARGE:
+                        default:
                             $this->_logger->info('!!!! completed');
                             $this->loader->addTransaction($order, $bankParams, $tranType, true);
                             $this->loader->updatePaidOrder($order, $bankParams);
                             $this->messageManager->addSuccessMessage('Order Paid Successfully.');
-                            break;
-
-                        case Loader::TRANSACTION_TYPE_AUTHORIZATION:
-                            $tranType = Transaction::TYPE_AUTH;
-                            $this->loader->addTransaction($order, $bankParams, $tranType, false);
-                            break;
-
-                        default:
-                            $this->_logger->error(sprintf('Unknown transaction type: %1$s Order ID: %2$s', $this->loader->getConfigData('payment_action'), $order_id));
                             break;
                     }
 

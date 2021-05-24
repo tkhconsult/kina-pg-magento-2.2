@@ -52,6 +52,7 @@ class Loader {
     protected $backRefUrl;
 
     const TRANSACTION_TYPE_CHARGE = 'order';
+    const TRANSACTION_TYPE_PAYMENT = 'payment';
     const TRANSACTION_TYPE_AUTHORIZATION = 'authorize';
 
     /**
@@ -112,7 +113,7 @@ class Loader {
      * @param $bankResponse
      * @return bool
      */
-    public function checkTransaction($order, $bankResponse) {
+    public function checkTransaction($order, $bankResponse, $logger = null) {
         $amount   = $bankResponse->{Response::AMOUNT};
         $currency = $bankResponse->{Response::CURRENCY};
         $trxType  = $bankResponse::TRX_TYPE;
@@ -121,20 +122,28 @@ class Loader {
         $order_currency = $order->getOrderCurrencyCode();
 
         //Validate currency
-        if(strtolower($currency) !== strtolower($order_currency))
+        if(strtolower($currency) !== strtolower($order_currency)) {
+            if(!is_null($logger)) $logger->error('currency not matched: ' . strtolower($currency) . '!==' . strtolower($order_currency));
             return false;
+        }
 
         //Validate amount
-        if($amount <= 0)
+        if($amount <= 0) {
+            if(!is_null($logger)) $logger->error('amount less than 0: ' . $amount);
             return false;
+        }
+
+        $diff = abs($order_total - $amount);
+
+        if(!is_null($logger)) $logger->info('amount, order total, diff: "' . $amount . '", "' . $order_total . '", "' . $diff . '"');
 
         if($trxType === KinaBankGateway::TRX_TYPE_REFUND)
-            return $amount <= $order_total;
+            return $amount <= $order_total || $diff < 1;
 
         if($trxType === KinaBankGateway::TRX_TYPE_REVERSAL)
-            return $amount <= $order_total;
+            return $amount <= $order_total || $diff < 1;
 
-        return $amount == $order_total;
+        return $amount == $order_total || $diff < 1;
     }
 
     public function getOrderMessage($message) {
