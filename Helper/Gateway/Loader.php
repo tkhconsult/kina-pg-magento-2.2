@@ -55,6 +55,9 @@ class Loader {
     const TRANSACTION_TYPE_PAYMENT = 'payment';
     const TRANSACTION_TYPE_AUTHORIZATION = 'authorize';
 
+    const TEST_URL = 'https://devegateway.kinabank.com.pg';
+    const PROD_URL = 'https://ipg.kinabank.com.pg';
+
     /**
      * @var ScopeConfigInterface
      */
@@ -100,12 +103,21 @@ class Loader {
         $timezone = $this->getTimezone();
         $lang = 'en';
         $keyPath = ($testmode) ? $this->getTestKeyPath() : $this->getProdKeyPath();
-        $gatewayUrl = ($testmode ? 'https://devegateway.kinabank.com.pg/cgi-bin/cgi_link' : 'https://prodegateway.kinabank.com.pg/cgi-bin/cgi_link');
+        $gatewayUrl = $this->getHost($testmode) . '/cgi-bin/cgi_link';
         $sslVerify  = !$testmode;
         $defaultCurrency =  $this->getConfigData('currency');
         $backRefUrl = $this->backRefUrl;
 
         return compact('debug', 'testmode', 'merchantId', 'merchantTerminal', 'merchantUrl', 'merchantName', 'merchantAddress', 'timezone', 'lang', 'keyPath', 'gatewayUrl', 'sslVerify', 'defaultCurrency', 'backRefUrl');
+    }
+
+    public function getHost($testmode) {
+        $host = self::PROD_URL;
+        if($testmode) {
+            $host = self::TEST_URL;
+        }
+
+        return $host;
     }
 
     /**
