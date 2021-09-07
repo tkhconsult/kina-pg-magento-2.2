@@ -12,6 +12,8 @@
                 <title>Payment method (Kinabank)</title>
                 <debug>1</debug>
                 <test_mode>1</test_mode>
+                <test_url>https://devegateway.kinabank.com.pg</test_url>
+                <prod_url>https://ipg.kinabank.com.pg</prod_url>
                 <active>0</active>
                 <model>KinabankPaymentGatewayFacade</model>
                 <order_status>pending_payment</order_status>
