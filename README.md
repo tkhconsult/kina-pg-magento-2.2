@@ -38,3 +38,10 @@ Stores > Configuration > Sales > Payment Methods > Kinabank Payment Gateway Inte
 More details are available in the Kinabank Payment Gateway:
 
 https://docs.google.com/document/d/16zNhlXUQaLKryyJkcZ_ipCcf3q9I-k2uIWBGssbgE7M/edit?usp=sharing
+
+
+
+### [Release](../../releases) & Changelog
+
+#### [1.0.1](../../releases/tag/v1.0.1)
+- update prod url
