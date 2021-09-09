@@ -17,7 +17,6 @@ class KinaBankGateway
     const TRX_TYPE_AUTHORIZATION = 1;
     const TRX_TYPE_COMPLETION    = 21;
     const TRX_TYPE_REVERSAL      = 24;
-    const TRX_TYPE_REFUND        = 174;
 
     /**
      * @var bool
@@ -100,6 +99,16 @@ class KinaBankGateway
     private $merchantAddress;
 
     /**
+     * @var string
+     */
+    private $pageType = 'embedded';
+
+    /**
+     * @var array
+     */
+    private $supportedPageTypes = ['embedded', 'hosted'];
+
+    /**
      * KinaBankGateway constructor.
      */
     public function __construct()
@@ -123,6 +132,7 @@ class KinaBankGateway
             ->setMerchantUrl(getenv('KINA_BANK_MERCHANT_URL'))
             ->setMerchantName(getenv('KINA_BANK_MERCHANT_NAME'))
             ->setMerchantAddress(getenv('KINA_BANK_MERCHANT_ADDRESS'))
+            ->setPaymentPageType(getenv('KINA_BANK_PAYMENT_PAGE_TYPE'))
             ->setTimezone(getenv('KINA_BANK_MERCHANT_TIMEZONE_NAME'))
             ->setCountryCode(getenv('KINA_BANK_MERCHANT_COUNTRY_CODE'))
             ->setDefaultCurrency(getenv('KINA_BANK_MERCHANT_DEFAULT_CURRENCY'))
@@ -361,6 +371,7 @@ class KinaBankGateway
     public function setMerchantId($id)
     {
         $this->merchant = $id;
+        KinaBank\Response::$merchant = $id;
 
         return $this;
     }
@@ -394,6 +405,22 @@ class KinaBankGateway
     }
 
     /**
+     * Payment page type setter
+     *
+     * @param $pageType
+     *
+     * @return $this
+     */
+    public function setPaymentPageType($pageType)
+    {
+        if (!in_array($pageType, $this->supportedPageTypes, true)) return $this;
+
+        $this->pageType = $pageType;
+
+        return $this;
+    }
+
+    /**
      * Set Merchant primary web site URL
      *
      * @param $url
@@ -416,6 +443,7 @@ class KinaBankGateway
     {
         #Request security options
         KinaBank\Request::$secretKeyPath = $secretKeyPath;
+        KinaBank\Response::$secretKeyPath = $secretKeyPath;
 
         return $this;
     }
@@ -453,7 +481,7 @@ class KinaBankGateway
                     KinaBank\Authorization\AuthorizationRequest::MERCHANT      => $this->merchant,
                     KinaBank\Authorization\AuthorizationRequest::MERCH_NAME    => $this->merchantName,
                     KinaBank\Authorization\AuthorizationRequest::MERCH_URL     => $this->merchantUrl,
-                ], $this->gatewayUrl, $this->acceptUrl, $this->submitButtonLabel, $this->debug, $this->sslVerify
+                ], $this->gatewayUrl, $this->pageType, $this->acceptUrl, $this->submitButtonLabel, $this->debug, $this->sslVerify
             );
             $request->request();
         } catch (KinaBank\Exception $e) {
@@ -490,7 +518,7 @@ class KinaBankGateway
                     KinaBank\Completion\CompletionRequest::NONCE     => $this->generateNonce(),
                     KinaBank\Completion\CompletionRequest::RRN       => $rrn,
                     KinaBank\Completion\CompletionRequest::INT_REF   => $intRef,
-                ], $this->gatewayUrl, $this->debug, $this->sslVerify
+                ], $this->gatewayUrl, $this->pageType, $this->acceptUrl, $this->submitButtonLabel, $this->debug, $this->sslVerify
             );
 
             return $request->request();
@@ -503,117 +531,6 @@ class KinaBankGateway
                 );
             }
         }
-    }
-
-    /**
-     * @param mixed  $orderId  Merchant order ID
-     * @param float  $amount   Transaction amount
-     * @param string $rrn      Retrieval reference number from authorization response
-     * @param string $intRef   Internal reference number from authorization response
-     * @param string $currency Order currency: 3-character currency code
-     *
-     * @return mixed|void
-     * @throws KinaBank\Exception
-     */
-    public function requestReversal($orderId, $amount, $rrn, $intRef, $currency = null)
-    {
-        try {
-            $request = new KinaBank\Reversal\ReversalRequest(
-                [
-                    KinaBank\Reversal\ReversalRequest::TERMINAL  => $this->terminal,
-                    KinaBank\Reversal\ReversalRequest::ORDER     => static::normalizeOrderId($orderId),
-                    KinaBank\Reversal\ReversalRequest::AMOUNT    => static::normalizeAmount($amount),
-                    KinaBank\Reversal\ReversalRequest::CURRENCY  => $currency ? $currency : $this->defaultCurrency,
-                    KinaBank\Reversal\ReversalRequest::TIMESTAMP => $this->getTransactionTimestamp(),
-                    KinaBank\Reversal\ReversalRequest::NONCE     => $this->generateNonce(),
-                    KinaBank\Reversal\ReversalRequest::RRN       => $rrn,
-                    KinaBank\Reversal\ReversalRequest::INT_REF   => $intRef,
-                ], $this->gatewayUrl, $this->debug, $this->sslVerify
-            );
-
-            return $request->request();
-        } catch (KinaBank\Exception $e) {
-            if ($this->debug) {
-                throw $e;
-            } else {
-                throw new KinaBank\Exception(
-                    'Reversal request to the payment gateway failed. Please contact '.$this->merchantUrl.' for further details.'.$e->getMessage()
-                );
-            }
-        }
-    }
-
-
-    /**
-     * @param mixed  $orderId  Merchant order ID
-     * @param float  $amount   Transaction amount
-     * @param string $rrn      Retrieval reference number from authorization response
-     * @param string $intRef   Internal reference number from authorization response
-     * @param string $currency Order currency: 3-character currency code
-     *
-     * @return mixed|void
-     * @throws KinaBank\Exception
-     */
-    public function requestRefund($orderId, $amount, $rrn, $intRef, $currency = null)
-    {
-        try {
-            $request = new KinaBank\Refund\RefundRequest(
-                [
-                    KinaBank\Refund\RefundRequest::TERMINAL  => $this->terminal,
-                    KinaBank\Refund\RefundRequest::ORDER     => static::normalizeOrderId($orderId),
-                    KinaBank\Refund\RefundRequest::AMOUNT    => static::normalizeAmount($amount),
-                    KinaBank\Refund\RefundRequest::CURRENCY  => $currency ? $currency : $this->defaultCurrency,
-                    KinaBank\Refund\RefundRequest::TIMESTAMP => $this->getTransactionTimestamp(),
-                    KinaBank\Refund\RefundRequest::NONCE     => $this->generateNonce(),
-                    KinaBank\Refund\RefundRequest::RRN       => $rrn,
-                    KinaBank\Refund\RefundRequest::INT_REF   => $intRef,
-                ], $this->gatewayUrl, $this->debug, $this->sslVerify
-            );
-
-            $response = $request->request();
-
-            if(strpos($response, 'RC==00') !== false) {
-                $response = $this->parseRefundSuccessResponse($response);
-                $response['DESCRIPTION'] = KinaBank\Response::convertRcMessage($response['RC']);
-            } else {
-                $needle = 'RC" value="';
-                if(strpos($response, $needle) !== false) {
-                    $code = substr($response, strpos($response, $needle) + strlen($needle), 3);
-                    $code = trim($code, '"');
-                } else {
-                    $response = $this->parseRefundSuccessResponse($response);
-                    $response['DESCRIPTION'] = KinaBank\Response::convertRcMessage($code);
-                    $code = $response['RC'];
-                }
-                $message = KinaBank\Response::convertRcMessage($code);
-                throw new KinaBank\Exception('RC: ' . $code . ' / ' . $message);
-            }
-
-            return $response;
-        } catch (KinaBank\Exception $e) {
-            if ($this->debug) {
-                throw $e;
-            } else {
-                throw new KinaBank\Exception(
-                    'Refund request to the payment gateway failed. Please contact support team for further details.'.$e->getMessage()
-                );
-            }
-        }
-    }
-
-    public function parseRefundSuccessResponse($html) {
-        $needle = 'form = ';
-        $rawData = substr($html, strpos($html, $needle) + strlen($needle));
-        $rawData = substr($rawData, 0, strpos($rawData, ';'));
-        $rawData = str_replace("'", '"', $rawData);
-        $json = json_decode($rawData);
-        $response = [];
-        foreach($json as $obj) {
-            if(in_array($obj->id, ['downloadForm'])) continue;
-            $response[$obj->id] = $obj->text;
-        }
-
-        return $response;
     }
 
     /**
