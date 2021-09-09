@@ -43,6 +43,9 @@ https://docs.google.com/document/d/16zNhlXUQaLKryyJkcZ_ipCcf3q9I-k2uIWBGssbgE7M/
 
 ### [Release](../../releases) & Changelog
 
+#### [1.0.2.1](../../releases/tag/v1.0.2.1)
+- rename function name
+
 #### [1.0.2](../../releases/tag/v1.0.2)
 - update js for submit button
 
