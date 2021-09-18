@@ -4,8 +4,56 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c89937b46bc94ec03307902a33bbf78a",
-    "packages": [],
+    "content-hash": "c63a377bdde26c986b7185d9b9369f8b",
+    "packages": [
+        {
+            "name": "tkhconsult/kina-pg-sdk",
+            "version": "v1.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tkhconsult/kina-pg-sdk.git",
+                "reference": "77eb69995c6500c2d2e8ec35004a006ab0795f92"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tkhconsult/kina-pg-sdk/zipball/77eb69995c6500c2d2e8ec35004a006ab0795f92",
+                "reference": "77eb69995c6500c2d2e8ec35004a006ab0795f92",
+                "shasum": ""
+            },
+            "require": {
+                "ext-openssl": "*",
+                "php": ">=5.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "TkhConsult\\KinaBankGateway\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "TKH Consult",
+                    "homepage": "https://github.com/tkhconsult",
+                    "role": "Vendor"
+                }
+            ],
+            "description": "Kinabank Payment Gateway SDK",
+            "homepage": "https://github.com/tkhconsult/kina-pg-sdk",
+            "keywords": [
+                "Bank",
+                "gateway",
+                "kina",
+                "kinabank",
+                "payment",
+                "sdk"
+            ],
+            "time": "2021-08-02T06:07:16+00:00"
+        }
+    ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
@@ -13,8 +61,9 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "~5.5.22|~5.6.5|7.0.2|7.0.4|~7.0.6|~7.1.0|~7.2.0|~7.3.0|~7.4.0|~7.4.1|~7.4.2|~7.4.3|~7.4.4|~7.4.5|~7.4.6|~7.4.7|~7.4.8"
+        "php": "~5.5.22|~5.6.5|7.0.2|7.0.4|~7.0.6|~7.1.0|~7.2.0|~7.3.0|~7.4.0|~7.4.1|~7.4.2|~7.4.3|~7.4.4|~7.4.5|~7.4.6|~7.4.7|~7.4.8",
+        "ext-curl": "*",
+        "ext-xmlwriter": "*"
     },
-    "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "platform-dev": []
 }
