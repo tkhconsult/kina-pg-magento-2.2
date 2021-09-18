@@ -23,7 +23,7 @@
                 </field>
                 <field id="payment_page_type" translate="label" type="select" sortOrder="85" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Payment Page Type</label>
-                    <source_model>TkhConsult\KinaPg\Model\Config\Backend\Enabledisable</source_model>
+                    <source_model>TkhConsult\KinaPg\Model\Config\Source\PaymentPageType</source_model>
                 </field>
                 <field id="test_mode" translate="label" type="select" sortOrder="85" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Test Mode</label>
