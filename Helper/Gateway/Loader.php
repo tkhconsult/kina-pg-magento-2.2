@@ -149,9 +149,6 @@ class Loader {
 
         if(!is_null($logger)) $logger->info('amount, order total, diff: "' . $amount . '", "' . $order_total . '", "' . $diff . '"');
 
-        if($trxType === KinaBankGateway::TRX_TYPE_REFUND)
-            return $amount <= $order_total || $diff < 1;
-
         if($trxType === KinaBankGateway::TRX_TYPE_REVERSAL)
             return $amount <= $order_total || $diff < 1;
 
