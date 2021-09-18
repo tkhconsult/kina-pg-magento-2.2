@@ -20,13 +20,12 @@ Please follow the Magento install instructions mentioned here: <a href="https://
 
 ### Setup the extension and refresh cache
 
-```bin/magento setup:upgrade```
-
-```bin/magento cache:flush```
-
-```bin/magento setup:di:compile```
-
-```bin/magento setup:static-content:deploy```
+```
+bin/magento setup:upgrade
+bin/magento cache:flush
+bin/magento setup:di:compile
+bin/magento setup:static-content:deploy
+```
 
 
 ## Configuration
