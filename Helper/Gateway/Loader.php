@@ -95,6 +95,7 @@ class Loader {
     public function getPaymentData() {
         $debug = $this->getConfigData('debug');
         $testmode = $this->getConfigData('test_mode');
+        $paymentPageType = $this->getConfigData('payment_page_type');
         $merchantId = $this->getConfigData('merchant/card_acceptor_id');
         $merchantTerminal = $this->getConfigData('merchant/terminal_id');
         $merchantUrl = $this->getConfigData('merchant/merchant_url');
@@ -108,7 +109,7 @@ class Loader {
         $defaultCurrency =  $this->getConfigData('currency');
         $backRefUrl = $this->backRefUrl;
 
-        return compact('debug', 'testmode', 'merchantId', 'merchantTerminal', 'merchantUrl', 'merchantName', 'merchantAddress', 'timezone', 'lang', 'keyPath', 'gatewayUrl', 'sslVerify', 'defaultCurrency', 'backRefUrl');
+        return compact('debug', 'testmode', 'paymentPageType', 'merchantId', 'merchantTerminal', 'merchantUrl', 'merchantName', 'merchantAddress', 'timezone', 'lang', 'keyPath', 'gatewayUrl', 'sslVerify', 'defaultCurrency', 'backRefUrl');
     }
 
     public function getHost($testmode) {
@@ -179,6 +180,7 @@ class Loader {
             ->setDebug($data['debug'])
             ->setDefaultLanguage($data['lang'])
             ->setAcceptUrl($this->getAcceptLogoUrl())
+            ->setPaymentPageType($data['paymentPageType'])
             ->setSubmitButtonLabel('Click here to pay');
 
         $kinaBankGateway->setSecurityOptions($data['keyPath']);
