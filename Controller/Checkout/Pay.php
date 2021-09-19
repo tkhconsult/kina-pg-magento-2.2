@@ -83,7 +83,7 @@ class Pay extends Action
             $message = sprintf('Order ID not received from $1$s', $this->methodTitle);
             $this->_logger->error($message);
             $this->messageManager->addErrorMessage($message);
-            return $this->_pageFactory->create();
+            return $this->addErrorMessage($order_id, $message);
         }
 
         $order = $this->orderRepository->get($this->getRequest()->getParam('orderId'));
@@ -91,7 +91,7 @@ class Pay extends Action
             $message = sprintf('Order #%1$s not found as received from %2$s.', $order_id, $this->methodTitle);
             $this->_logger->error($message);
             $this->messageManager->addErrorMessage($message);
-            return $this->_pageFactory->create();
+            return $this->addErrorMessage($order_id, $message);
         }
 
         $this->_logger->info('check result: ' . $check_result);
@@ -161,8 +161,16 @@ class Pay extends Action
         $order->setState(Order::STATE_PENDING_PAYMENT);
         $order->save();
         $this->messageManager->addErrorMessage($bankParams['DESCRIPTION']);
-        $this->_redirect('kinabank/checkout/index?orderId=' . $order_id);
+        return $this->addErrorMessage($order_id, $message);
+    }
 
-        return $this->_pageFactory->create();
+    public function addErrorMessage($order_id, $message) {
+        $data = $this->loader->getPaymentData();
+        if($data['paymentPageType'] == 'hosted') {
+            $this->_redirect('kinabank/checkout/index?orderId=' . $order_id . "&error=true");
+            return $this->_pageFactory->create();
+        } else {
+            return $this->_pageFactory->create();
+        }
     }
 }

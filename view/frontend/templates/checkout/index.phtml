@@ -39,8 +39,18 @@
     </table>
 </div>
 <?php
-    $block->getForm();
-?>
-<script>
-  submitPaymentForm2()
-</script>
+    if(isset($_GET['error'])){
+        $url = $_SERVER['REQUEST_URI'];
+        $url = substr($url, 0, strrpos($url, '&error='));
+        ?>
+        <a href="<?php echo $url; ?>">
+            <button class="btn btn-primary btn-lg alt" type="button">Pay Now</button>
+        </a>
+        <?php
+    } else {
+        $block->getForm(); ?>
+        <script>
+            submitPaymentForm2()
+        </script>
+        <?php
+    }
