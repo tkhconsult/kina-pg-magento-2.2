@@ -597,7 +597,7 @@ class KinaBankGateway
      */
     static public function normalizeAmount($amount)
     {
-        return str_replace(',', '.', (string)$amount);
+        return str_replace(',', '.', number_format($amount, 2, '.', ''));
     }
 
     /**
