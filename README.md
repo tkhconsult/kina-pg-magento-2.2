@@ -46,6 +46,8 @@ https://docs.google.com/document/d/16zNhlXUQaLKryyJkcZ_ipCcf3q9I-k2uIWBGssbgE7M/
 - implement hosted payment page
 - remove refund
 - fix wrong amount when no decimal number
+- fix module already defined issue
+
 
 #### [1.0.2.2](../../releases/tag/v1.0.2.2)
 - fix field not disabled issue
