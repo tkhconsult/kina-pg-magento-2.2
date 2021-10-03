@@ -2,7 +2,7 @@
     "name": "tkhconsult/kina-pg-magento",
     "description": "Magento Kinabank Payment Gateway",
 	"type": "magento2-module",
-	"version": "1.0.2.2",
+	"version": "1.0.3",
 	"license": [
         "OSL-3.0",
         "GPL-3.0"
