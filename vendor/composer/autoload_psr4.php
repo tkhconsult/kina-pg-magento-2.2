@@ -6,6 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'TkhConsult\\KinaPg\\' => array($baseDir . '/'),
     'TkhConsult\\KinaBankGateway\\' => array($vendorDir . '/tkhconsult/kina-pg-sdk/src'),
 );

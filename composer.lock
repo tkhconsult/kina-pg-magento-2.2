@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c63a377bdde26c986b7185d9b9369f8b",
+    "content-hash": "8928207a4b282b2ab0b056159fe31fc4",
     "packages": [
         {
             "name": "tkhconsult/kina-pg-sdk",
